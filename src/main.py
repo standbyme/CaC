@@ -2,6 +2,9 @@ import sys
 import unittest
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+assert load_dotenv()
 tc = unittest.TestCase()
 
 
