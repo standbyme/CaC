@@ -1,5 +1,6 @@
 import sys
 import unittest
+import uuid
 from abc import ABC, abstractmethod
 from pathlib import Path
 
@@ -21,11 +22,18 @@ src_path = Path().cwd().parent / "src"
 
 class Component(ABC):
     def __init__(self):
+        self.uuid = uuid.uuid4()
+
         self.narration_template = self.get_template("narration")
         self.visual_template = self.get_template("visual")
 
-        self.narration = self.render_narration()
-        self.visual = self.render_visual()
+    @property
+    def narration(self):
+        return self.render_narration()
+
+    @property
+    def visual(self):
+        return self.render_visual()
 
     def get_template(self, name: str):
         class_name = self.__class__.__name__
