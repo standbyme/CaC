@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image
 
 from .Component import Component
+from ..webdriver import screenshot
 
 
 class NewspaperComponent(Component):
@@ -19,6 +20,7 @@ class NewspaperComponent(Component):
         return self.visual_template.render(url=self.url)
 
     def generate_elements(self, cached_component_dir_path: Path):
-        array = np.random.randint(0, 256, size=(50, 50, 3), dtype=np.uint8)
-        image = Image.fromarray(array)
-        image.save(cached_component_dir_path / "image.png")
+        screenshot(
+            url=self.url,
+            file_path=cached_component_dir_path / "screenshot.png",
+        )

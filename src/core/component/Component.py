@@ -1,5 +1,6 @@
 import hashlib
 import os
+import shutil
 import unittest
 import uuid
 from abc import ABC, abstractmethod
@@ -29,18 +30,22 @@ class Component(ABC):
 
         cache_dir = Path().cwd() / "cache"
         cache_dir.mkdir(parents=True, exist_ok=True)
-
         cached_component_dir_path = cache_dir / f"{self.element_uuid_hash}"
-        if not cached_component_dir_path.exists():
-            cached_component_dir_path.mkdir(parents=True, exist_ok=False)
-            self.generate_elements(cached_component_dir_path)
 
-        project_dir_path.mkdir(parents=True, exist_ok=True)
+        try:
+            if not cached_component_dir_path.exists():
+                cached_component_dir_path.mkdir(parents=True, exist_ok=False)
+                self.generate_elements(cached_component_dir_path)
 
-        component_dir_path = project_dir_path / f"{self.component_uuid}"
-        component_dir_path.symlink_to(
-            cached_component_dir_path, target_is_directory=True
-        )
+            project_dir_path.mkdir(parents=True, exist_ok=True)
+
+            component_dir_path = project_dir_path / f"{self.component_uuid}"
+            component_dir_path.symlink_to(
+                cached_component_dir_path, target_is_directory=True
+            )
+        except:
+            shutil.rmtree(cached_component_dir_path)
+            raise
 
     @abstractmethod
     def generate_elements(self, cached_component_dir_path: Path):
