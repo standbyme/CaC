@@ -23,6 +23,7 @@ def screenshot(url: str, file_path: Path):
     driver.get(url)
     driver.implicitly_wait(20)
 
+    # [Key] Handle the cookie consent/email popup
     wait = WebDriverWait(driver, 10)
     button = wait.until(EC.element_to_be_clickable((By.ID, "cta-close")))
     button.click()
