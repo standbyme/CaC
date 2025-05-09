@@ -1,31 +1,26 @@
 import os
 from pathlib import Path
 
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from playwright.sync_api import sync_playwright
 
 Selenium_user_data_dir = os.environ.get("SELENIUM_USER_DATA_DIR")
 
 
 def screenshot(url: str, file_path: Path):
-    options = Options()
-    if Selenium_user_data_dir:
-        options.add_argument(f"user-data-dir={Selenium_user_data_dir}")
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        context = browser.new_context()
 
-    options.add_argument("--headless")
-    options.add_argument("profile-directory=Selenium")
+        page = context.new_page()
+        page.goto(url, wait_until="networkidle")
 
-    driver = webdriver.Firefox(options=options)
+        # Handle the cookie consent/email popup
+        try:
+            page.wait_for_selector("#cta-close", timeout=10000)
+            page.click("#cta-close")
+        except Exception:
+            pass  # If the button doesn't appear, continue
 
-    driver.get(url)
-    driver.implicitly_wait(20)
-
-    # [Key] Handle the cookie consent/email popup
-    wait = WebDriverWait(driver, 10)
-    button = wait.until(EC.element_to_be_clickable((By.ID, "cta-close")))
-    button.click()
-
-    driver.get_full_page_screenshot_as_file(str(file_path))
+        page.screenshot(path=str(file_path), full_page=True)
+        context.close()
+        browser.close()
