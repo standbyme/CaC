@@ -12,7 +12,8 @@ def screenshot(url: str, file_path: Path):
         context = browser.new_context()
 
         page = context.new_page()
-        page.goto(url, wait_until="networkidle")
+        page.goto(url, wait_until="load")
+        page.wait_for_timeout(5000)
 
         # Handle the cookie consent/email popup
         try:
