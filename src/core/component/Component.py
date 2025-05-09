@@ -1,6 +1,8 @@
 import hashlib
 import os
+import platform
 import shutil
+import subprocess
 import unittest
 import uuid
 from abc import ABC, abstractmethod
@@ -14,6 +16,26 @@ project_name = os.environ.get("PROJECT_NAME")
 tc.assertIsNotNone(project_name)
 
 project_dir_path = Path().cwd() / project_name
+
+
+def create_link_to_directory(source: Path, target: Path):
+    if not source.is_dir():
+        raise ValueError(f"Source '{source}' is not a directory.")
+
+    if target.exists():
+        raise FileExistsError(f"Target '{target}' already exists.")
+
+    system = platform.system()
+
+    if system == "Linux":
+        # Create symbolic link
+        target.symlink_to(source, target_is_directory=True)
+    elif system == "Windows":
+        # Use PowerShell to create a junction
+        command = f'New-Item -ItemType Junction -Path "{target}" -Target "{source}"'
+        subprocess.run(["powershell", "-Command", command], check=True, shell=True)
+    else:
+        raise NotImplementedError(f"Unsupported OS: {system}")
 
 
 class Component(ABC):
@@ -40,9 +62,7 @@ class Component(ABC):
             project_dir_path.mkdir(parents=True, exist_ok=True)
 
             component_dir_path = project_dir_path / f"{self.component_uuid}"
-            component_dir_path.symlink_to(
-                cached_component_dir_path, target_is_directory=True
-            )
+            create_link_to_directory(cached_component_dir_path, component_dir_path)
         except:
             shutil.rmtree(cached_component_dir_path)
             raise
