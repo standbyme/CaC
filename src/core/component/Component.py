@@ -33,7 +33,9 @@ def create_link_to_directory(source: Path, target: Path):
     elif system == "Windows":
         # Use PowerShell to create a junction
         command = f'New-Item -ItemType Junction -Path "{target}" -Target "{source}"'
-        subprocess.run(["powershell", "-Command", command], check=True, shell=True)
+        subprocess.run(
+            ["powershell", "-Command", command], check=True, stdout=subprocess.DEVNULL
+        )
     else:
         raise NotImplementedError(f"Unsupported OS: {system}")
 
