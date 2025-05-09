@@ -18,7 +18,23 @@ add_proj_to_PYTHONPATH()
 from src.core.component.NewspaperComponent import NewspaperComponent
 
 
+def topic_to_text_script(topic: str):
+    raise NotImplementedError()
+
+
+def text_script_to_components(text_script: str):
+    raise NotImplementedError()
+
+
+def topic_to_AV_script(topic: str):
+    text_script = topic_to_text_script(topic)
+    components = text_script_to_components(text_script)
+    return components
+
+
 def main():
+    topic = "How the rich avoid taxes?"
+
     component = NewspaperComponent(
         url="""https://www.propublica.org/article/the-secret-irs-files-trove-of-never-before-seen-records-reveal-how-the-wealthiest-avoid-income-tax""",
     )
