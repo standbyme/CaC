@@ -49,6 +49,7 @@ class Component(ABC):
             self.element_uuid.encode("utf-8")
         ).hexdigest()
 
+    def generate(self):
         self.narration_template = self.get_template("narration")
         self.visual_template = self.get_template("visual")
 
