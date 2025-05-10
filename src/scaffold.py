@@ -60,7 +60,7 @@ def main():
         data = file.read()
 
     data = data.replace(
-        "__all__ = [",
+        "\n__all__ = [",
         f"""from .{full_component_name} import {full_component_name}
 
 __all__ = [""",
@@ -68,8 +68,8 @@ __all__ = [""",
 
     data = data.replace(
         "]",
-        f""""{full_component_name}",
-]""",
+        f'''    "{full_component_name}",
+]''',
     )
 
     with open(
