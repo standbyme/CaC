@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import numpy as np
-from PIL import Image
 
 from .Component import Component
 from ..webdriver import screenshot

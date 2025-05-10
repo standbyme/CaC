@@ -15,7 +15,7 @@ def add_proj_to_PYTHONPATH():
 
 
 add_proj_to_PYTHONPATH()
-from src.core.component.NewspaperComponent import NewspaperComponent
+from src.core.component import NewspaperComponent
 
 
 def topic_to_text_script(topic: str):

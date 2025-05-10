@@ -16,13 +16,15 @@ def add_proj_to_PYTHONPATH():
 
 
 def main():
+    full_component_name = f"{component_name.capitalize()}Component"
+
     with open(
         Path.cwd().parent / "src" / "core" / "component" / "GreetingComponent.py",
         "r",
     ) as file:
         data = file.read()
 
-    data = data.replace("GreetingComponent", f"{component_name.capitalize()}Component")
+    data = data.replace("GreetingComponent", full_component_name)
 
     target_path = (
         Path.cwd().parent
@@ -43,16 +45,38 @@ def main():
 
     shutil.copytree(
         Path.cwd().parent / "src" / "template" / "component" / "GreetingComponent",
-        Path.cwd().parent
-        / "src"
-        / "template"
-        / "component"
-        / f"{component_name.capitalize()}Component",
+        Path.cwd().parent / "src" / "template" / "component" / full_component_name,
     )
 
     print(
         f"Created {component_name.capitalize()}Component",
     )
+
+    # add the component to the __init__.py file
+    with open(
+        Path.cwd().parent / "src" / "core" / "component" / "__init__.py",
+        "r",
+    ) as file:
+        data = file.read()
+
+    data = data.replace(
+        "__all__ = [",
+        f"""from .{full_component_name} import {full_component_name}
+
+__all__ = [""",
+    )
+
+    data = data.replace(
+        "]",
+        f""""{full_component_name}",
+]""",
+    )
+
+    with open(
+        Path.cwd().parent / "src" / "core" / "component" / "__init__.py",
+        "w",
+    ) as file:
+        file.write(data)
 
 
 if __name__ == "__main__":
