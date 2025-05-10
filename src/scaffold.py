@@ -45,7 +45,7 @@ if __name__ == "__main__":
         description="Scaffold for creating a new component in the src/core/component directory and src/template directory.",
     )
     arg_parser.add_argument(
-        "component_name",
+        "--component_name",
         type=str,
     )
     args = arg_parser.parse_args()
