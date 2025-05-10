@@ -33,13 +33,10 @@ def main():
         / "component"
         / f"{component_name.capitalize()}Component.py"
     )
-    tc.assertFalse(
-        target_path.exists(),
-    )
 
     with open(
         target_path,
-        "w",
+        "x",
     ) as file:
         file.write(data)
 
@@ -68,8 +65,8 @@ __all__ = [""",
 
     data = data.replace(
         "]",
-        f'''    "{full_component_name}",
-]''',
+        f"""    "{full_component_name}",
+]""",
     )
 
     with open(
