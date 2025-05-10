@@ -13,7 +13,6 @@ tc = unittest.TestCase()
 def add_proj_to_PYTHONPATH():
     cwd = Path().cwd()
     assert cwd.name == "workdir"
-    sys.path.insert(0, str(cwd.parent))
 
 
 def main():
@@ -50,3 +49,5 @@ if __name__ == "__main__":
     )
     args = arg_parser.parse_args()
     component_name = args.component_name
+
+    main()
