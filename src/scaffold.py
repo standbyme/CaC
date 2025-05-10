@@ -51,7 +51,7 @@ def main():
     )
 
     print(
-        f"Created {component_name.capitalize()}Component.",
+        f"Created {component_name.capitalize()}Component",
     )
 
 
