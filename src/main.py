@@ -1,3 +1,5 @@
+import json
+import os
 import sys
 import unittest
 from concurrent.futures import ThreadPoolExecutor
@@ -17,6 +19,11 @@ def add_proj_to_PYTHONPATH():
 
 add_proj_to_PYTHONPATH()
 from src.core.component import *
+
+project_name = os.environ.get("PROJECT_NAME")
+tc.assertIsNotNone(project_name)
+
+project_dir_path = Path().cwd() / project_name
 
 
 def topic_to_text_script(topic: str):
@@ -57,6 +64,14 @@ def main():
 
     for component in AV_script:
         component.generate()
+
+    meta = {
+        "topic": topic,
+        "component_order": [component.uuid for component in AV_script],
+    }
+
+    with open(project_dir_path / "meta.json", "w") as f:
+        f.write(json.dumps(meta, indent=4))
 
 
 if __name__ == "__main__":
