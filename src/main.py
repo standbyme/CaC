@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import sys
 import unittest
 from concurrent.futures import ThreadPoolExecutor
@@ -58,6 +59,9 @@ def topic_to_AV_script(topic: str):
 
 
 def main():
+    if project_dir_path.exists():
+        shutil.rmtree(project_dir_path)
+
     topic = "How the rich avoid taxes?"
 
     AV_script = topic_to_AV_script(topic)
