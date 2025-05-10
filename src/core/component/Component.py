@@ -49,10 +49,10 @@ class Component(ABC):
             self.element_uuid.encode("utf-8")
         ).hexdigest()
 
-    def generate(self):
         self.narration_template = self.get_template("narration")
         self.visual_template = self.get_template("visual")
 
+    def generate(self):
         cache_dir = Path().cwd() / "cache"
         cache_dir.mkdir(parents=True, exist_ok=True)
         cached_component_dir_path = cache_dir / f"{self.element_uuid_hash}"
@@ -61,6 +61,12 @@ class Component(ABC):
             if not cached_component_dir_path.exists():
                 cached_component_dir_path.mkdir(parents=True, exist_ok=False)
                 self.generate_elements(cached_component_dir_path)
+
+                with open(cached_component_dir_path / "narration.txt", "x") as f:
+                    f.write(self.render_narration())
+
+                with open(cached_component_dir_path / "visual.txt", "x") as f:
+                    f.write(self.render_visual())
 
             project_dir_path.mkdir(parents=True, exist_ok=True)
 
@@ -81,14 +87,6 @@ class Component(ABC):
     @abstractmethod
     def render_visual(self):
         raise NotImplementedError()
-
-    @property
-    def narration(self):
-        return self.render_narration()
-
-    @property
-    def visual(self):
-        return self.render_visual()
 
     def get_template(self, name: str):
         class_name = self.__class__.__name__
