@@ -16,14 +16,30 @@ def add_proj_to_PYTHONPATH():
 
 
 def main():
-    shutil.copyfile(
+    with open(
         Path.cwd().parent / "src" / "core" / "component" / "GreetingComponent.py",
+        "r",
+    ) as file:
+        data = file.read()
+
+    data = data.replace("GreetingComponent", f"{component_name.capitalize()}Component")
+
+    target_path = (
         Path.cwd().parent
         / "src"
         / "core"
         / "component"
-        / f"{component_name.capitalize()}Component.py",
+        / f"{component_name.capitalize()}Component.py"
     )
+    tc.assertFalse(
+        target_path.exists(),
+    )
+
+    with open(
+        target_path,
+        "w",
+    ) as file:
+        file.write(data)
 
     shutil.copytree(
         Path.cwd().parent / "src" / "template" / "component" / "GreetingComponent",
@@ -49,5 +65,9 @@ if __name__ == "__main__":
     )
     args = arg_parser.parse_args()
     component_name = args.component_name
+
+    tc.assertFalse(
+        component_name.lower().endswith("component"),
+    )
 
     main()
