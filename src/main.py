@@ -71,7 +71,7 @@ def main():
 
     meta = {
         "topic": topic,
-        "component_order": [component.uuid for component in AV_script],
+        "component_order": [component.component_uuid for component in AV_script],
     }
 
     with open(project_dir_path / "meta.json", "w") as f:
