@@ -22,3 +22,5 @@ class NewspaperComponent(Component):
             url=self.url,
             file_path=cached_component_dir_path / "screenshot.png",
         )
+        # save the SEO head image (typically specified via <meta property="og:image" ...> or similar)
+        # https://chatgpt.com/c/682a87fb-b274-800e-891e-1d2bd20c2230
